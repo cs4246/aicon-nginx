@@ -1,16 +1,26 @@
 server {
     listen 80;
     server_name cs5446.comp.nus.edu.sg cs5446-i.comp.nus.edu.sg;
+
     server_tokens off;
 
     client_max_body_size 500M;
 
-    fastcgi_param   SERVER_NAME         $host;
+    fastcgi_param SERVER_NAME $host;
 
     location / {
-        proxy_pass          http://127.0.0.1:8000;
-        proxy_set_header    Host                $http_host;
-        proxy_set_header    X-Real-IP           $remote_addr;
-        proxy_set_header    X-Forwarded-For     $proxy_add_x_forwarded_for;
+        proxy_pass http://127.0.0.1:8000;
+
+        proxy_set_header X-Forwarded-Proto    $scheme;
+        proxy_set_header X-Forwarded-Protocol $scheme;
+        proxy_set_header Host                 $http_host;
+        proxy_set_header X-Real-IP            $remote_addr;
+        proxy_set_header X-Forwarded-For      $proxy_add_x_forwarded_for;
+    }
+
+
+    location = /favicon.ico { access_log off; log_not_found off; }
+    location /static/ {
+        root /home/cs5446/aicon;
     }
 }
